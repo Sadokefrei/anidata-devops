@@ -1,11 +1,34 @@
-- name: Install dependencies
-  run: |
-    pip install -r requirements-dev.txt
+name: CI
 
-- name: Run lint (ruff)
-  run: |
-    ruff check .
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
 
-- name: Run tests (pytest)
-  run: |
-    pytest
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          cd anidata-scraper
+          pip install -r requirements-dev.txt
+
+      - name: Run lint (ruff)
+        run: |
+          cd anidata-scraper
+          ruff check .
+
+      - name: Run tests (pytest)
+        run: |
+          cd anidata-scraper
+          pytest
